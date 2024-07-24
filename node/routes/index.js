@@ -1,28 +1,11 @@
-import express from 'express'
-import pg from "pg";
-const { Pool } = pg;
+import express from 'express';
+import db from '../services/queries';
+
 var router = express.Router();
 
 // put this into another file to handle db work
-const pool = new Pool({
-  user: 'me',
-  host: 'localhost',
-  database: 'homes',
-  password: 'password',
-  port: 5432,
-})
 
-const getUsers = (request, response) => {
-  pool.query('SELECT * FROM users ORDER BY id ASC', (error, results) => {
-    console.log('herrrrreeee!')
-    if (error) {
-      throw error
-    }
-    response.status(200).json(results.rows)
-  })
-}
-
-router.post('/hit_db', getUsers)
+router.post('/hit_db', db.getUsers)
 
 /* GET home page. */
 router.get('/testing', function(req, res, next) {
