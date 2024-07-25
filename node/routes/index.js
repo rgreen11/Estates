@@ -5,18 +5,15 @@ var router = express.Router();
 
 // put this into another file to handle db work
 
-router.post('/hit_db', db.getUsers)
 
-/* GET home page. */
-router.get('/testing', function(req, res, next) {
-  // res.render('index', { title: 'Rich' });
- 
+/* CREATE */
+router.post('/add_user', db.createUser)
+
+/* READ */
+router.get('/', function(req, res, next) {
   res.send('index', { title: 'Rich' });
 });
 
-router.post('/testing', function(req, res, next) {
-  res.send('ya hit me!');
-});
 
 // app.post('/', (req, res) => {
 //   res.send('Got a POST request')
