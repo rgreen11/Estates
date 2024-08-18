@@ -1,6 +1,5 @@
 import express from 'express';
-import db from '../services/queries';
-
+import db from '../services/queries.js';
 var router = express.Router();
 
 // put this into another file to handle db work
@@ -11,7 +10,9 @@ router.post('/add_user', db.createUser)
 
 /* READ */
 router.get('/', function(req, res, next) {
-  res.send('index', { title: 'Rich' });
+  
+  res.send(db.getUsers(_,))
+  // res.send('index', { title: 'Rich' });
 });
 
 
@@ -27,6 +28,6 @@ router.get('/', function(req, res, next) {
 // app.delete('/user', (req, res) => {
 //   res.send('Got a DELETE request at /user')
 // })
-
+// npm start
 
 export default router;
