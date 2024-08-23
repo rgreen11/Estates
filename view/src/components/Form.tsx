@@ -1,72 +1,89 @@
 import React, { useState } from "react";
 import "./style/Form.css";
 
-const InputForm = () => {
-  const customerInfo = [
-    "name",
-    "email",
-    "phone_number",
-    // "address",
-    // "has_realtor",
-    // "brokerage",
-  ];
-  const [texts, setTexts] = useState({});
+const InputForm = ({ handleForm, texts }) => {
 
-  const handleChange = (event, type) => {
+  const handleFullNameChange = (event) => {
     if (event.target.value) {
-      texts[type] = event.target.value
-       setTexts({...texts});
-       console.log(texts)
+      return handleForm({
+        ...texts,
+        name: event.target.value,
+      });
+    }
+  };
+
+  const handleEmailChange = (event) => {
+    if (event.target.value) {
+      return handleForm({
+        ...texts,
+        email: event.target.value,
+      });
+    }
+  };
+
+  const handleNumberChange = (event) => {
+    if (event.target.value) {
+      return handleForm({
+        ...texts,
+        phone_number: event.target.value,
+      });
     }
   };
 
   return (
-    <>
-      {customerInfo.map((type, idx) => {
-        return (
-          <input
-            id={`user${type}Input`}
-            type="type"
-            key={idx}
-            onChange={(e) => handleChange(e, type)}
-          />
-        );
-      })}
-    </>
+    <div className="form_container">
+      <input
+        id="userNameInput"
+        type="type"
+        className="input-item"
+        onChange={(e) => handleFullNameChange(e)}
+      />
+      <input
+        id="userEmailInput"
+        type="type"
+        className="input-item"
+        onChange={(e) => handleEmailChange(e)}
+      />
+      <input
+        id="userNumberInput"
+        type="type"
+        className="input-item"
+        onChange={(e) => handleNumberChange(e)}
+      />
+    </div>
   );
 };
 
 const Form = ({ title }: { title: string }) => {
+  const [texts, setTexts] = useState({ name: "", email: "", phone_number: "" });
+
   const submitData = (event) => {
     event.preventDefault();
-    const {
-      usernameInput,
-      useremailInput,
-      userphoneNumberInput,
-      userhasRealtorInput,
-      userbrokerageInput,
-    } = event.currentTarget.elements;
 
-    if (!usernameInput || !useremailInput || !userphoneNumberInput) {
+    const { name, email, phone_number } = texts;
+    if (!name || !email || !phone_number) {
+      return new Error("Fill in the blanks");
     }
-
-    return fetch("http://localhost:8080/users", {
-      method: "post",
-      mode: "no-cors", // I intsalled cors so I may not need this
-    })
-      .then((data) => {
-        console.log(data, data.body);
-      })
+    const request = new Request("http://localhost:8080/users/save", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ ...texts }),
+    });
+    return fetch(request)
       .catch((e) => {
         console.log(e);
       });
   };
-
-  // <form className="form_container" onSubmit={submitData}></form>
   return (
     <div className="form_container">
-      <InputForm />
-      <button type="submit">{title}</button>
+      <div className="form">
+        <InputForm handleForm={setTexts} texts={texts} />
+        <button type="submit" onClick={submitData}>
+          {title}
+        </button>
+      </div>
     </div>
   );
 };

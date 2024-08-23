@@ -4,12 +4,13 @@ import Form from "./components/Form.tsx";
 function App() {
   return (
     <div className="App">
-      <header className="App-header">
-        <p>Getting started</p>
-        <Form
-          title={"Learn React"}
-        />
-      </header>
+      <header className="App-header"></header>
+
+      <body>
+        <div className="container">
+          <Form title={"Learn React"} />
+        </div>
+      </body>
     </div>
   );
 }
