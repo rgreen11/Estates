@@ -11,7 +11,7 @@ router.post('/add_user', db.createUser)
 /* READ */
 router.get('/', function(req, res, next) {
   
-  res.send(db.getUsers(_,))
+  // res.send(db.getUsers(_,))
   // res.send('index', { title: 'Rich' });
 });
 

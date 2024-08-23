@@ -55,7 +55,7 @@ const InputForm = ({ handleForm, texts }) => {
 };
 
 const Form = ({ title }: { title: string }) => {
-  const [texts, setTexts] = useState({ name: "", email: "", phone_number: "" });
+  const [texts, setTexts] = useState({ name: "", email: "", phone_number: "", address: '123 main rich', has_realtor: false,  brokerage: ''});
 
   const submitData = (event) => {
     event.preventDefault();
@@ -73,7 +73,7 @@ const Form = ({ title }: { title: string }) => {
     });
     return fetch(request)
       .catch((e) => {
-        console.log(e);
+        new Error(e)
       });
   };
   return (
