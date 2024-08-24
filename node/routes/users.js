@@ -13,7 +13,7 @@ router.post('/save', function(req, res, next) {
   // console.log(req.params)
   db.createUser(req)
 
-  res.send(200, 'Success')
+  res.status(201).send('success')
 });
 
 export default router;
