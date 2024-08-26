@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import "./style/Form.css";
 
 const InputForm = ({ handleForm, texts }) => {
-
   const handleFullNameChange = (event) => {
     if (event.target.value) {
       return handleForm({
@@ -55,7 +54,14 @@ const InputForm = ({ handleForm, texts }) => {
 };
 
 const Form = ({ title }: { title: string }) => {
-  const [texts, setTexts] = useState({ name: "", email: "", phone_number: "", address: '123 main rich', has_realtor: false,  brokerage: ''});
+  const [texts, setTexts] = useState({
+    name: "",
+    email: "",
+    phone_number: "",
+    address: "123 main rich",
+    has_realtor: false,
+    brokerage: "a",
+  });
 
   const submitData = (event) => {
     event.preventDefault();
@@ -72,16 +78,20 @@ const Form = ({ title }: { title: string }) => {
       body: JSON.stringify({ ...texts }),
     });
     return fetch(request)
+      .then((status) => {
+        console.log(status);
+      })
       .catch((e) => {
-        new Error(e)
+        new Error(e);
       });
   };
   return (
     <div className="form_container">
+      <h1>Open house</h1>
       <div className="form">
         <InputForm handleForm={setTexts} texts={texts} />
         <button type="submit" onClick={submitData}>
-          {title}
+          Submit
         </button>
       </div>
     </div>
