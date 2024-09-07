@@ -20,12 +20,13 @@ const getUsers = (request, response) => {
 };
 
 const createUser = (request, response) => {
-  const { name, email, phone_number, address, has_realtor, brokerage } =
+  const { name, email, phoneNumber, address, hasRealtor, brokerage } =
     request.body;
-    if (name && email && phone_number && address) {
+    console.log(response.body)
+    if (name && email && phoneNumber && address) {
     pool.query(
       "INSERT INTO users (name, email, phone_number, address, has_realtor, brokerage) VALUES ($1, $2, $3, $4, $5, $6)",
-      [name, email, phone_number, address, has_realtor, brokerage],
+      [name, email, phoneNumber, address, hasRealtor, brokerage],
       (error, results) => {
         if (error) {
           throw error;

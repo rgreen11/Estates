@@ -24,7 +24,25 @@ const InputForm = ({ handleForm, texts }) => {
     if (event.target.value) {
       return handleForm({
         ...texts,
-        phone_number: event.target.value,
+        phoneNumber: event.target.value,
+      });
+    }
+  };
+
+  const handleHasRealtor = (event) => {
+    if (event.target.value) {
+      return handleForm({
+        ...texts,
+        hasRealtor: event.target.value,
+      });
+    }
+  };
+
+  const handleBrokerage = (event) => {
+    if (event.target.value) {
+      return handleForm({
+        ...texts,
+        brokerage: event.target.value,
       });
     }
   };
@@ -49,6 +67,18 @@ const InputForm = ({ handleForm, texts }) => {
         className="input-item"
         onChange={(e) => handleNumberChange(e)}
       />
+      <input
+        id="userHasRealtorInput"
+        type="checkbox"
+        className="input-item"
+        onChange={(e) => handleHasRealtor(e)}
+      />
+      <input
+        id="userBrokerageInput"
+        type="type"
+        className="input-item"
+        onChange={(e) => handleBrokerage(e)}
+      />
     </div>
   );
 };
@@ -57,17 +87,18 @@ const Form = ({ title }: { title: string }) => {
   const [texts, setTexts] = useState({
     name: "",
     email: "",
-    phone_number: "",
+    phoneNumber: "",
     address: "123 main rich",
-    has_realtor: false,
-    brokerage: "a",
+    hasRealtor: false,
+    brokerage: "",
   });
+  const [success, setSuccess] = useState(false);
 
   const submitData = (event) => {
     event.preventDefault();
 
-    const { name, email, phone_number } = texts;
-    if (!name || !email || !phone_number) {
+    const { name, email, phoneNumber } = texts;
+    if (!name || !email || !phoneNumber) {
       return new Error("Fill in the blanks");
     }
     const request = new Request("http://localhost:8080/users/save", {
@@ -79,7 +110,8 @@ const Form = ({ title }: { title: string }) => {
     });
     return fetch(request)
       .then((status) => {
-        console.log(status);
+        console.log({ status });
+        setSuccess(true);
       })
       .catch((e) => {
         new Error(e);
@@ -87,7 +119,8 @@ const Form = ({ title }: { title: string }) => {
   };
   return (
     <div className="form_container">
-      <h1>Open house</h1>
+      <h1>123 Main st, Brooklyn, NY 11206</h1>
+      <h3>Open house</h3>
       <div className="form">
         <InputForm handleForm={setTexts} texts={texts} />
         <button type="submit" onClick={submitData}>
