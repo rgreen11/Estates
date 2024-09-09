@@ -7,8 +7,6 @@ router.get("/", function (req, res, next) {
   res.send("respond with a resource");
 });
 
-// create openhouse
-router.post("/save", db.createUser);
-// router.get("/all-users", db.getAllUsers);
-
-export default router;
+// authentication
+router.post("/signup", db.signup);
+router.get("/login", db.login);

@@ -22,8 +22,8 @@ const getUsers = (request, response) => {
 const createUser = (request, response) => {
   const { name, email, phoneNumber, address, hasRealtor, brokerage } =
     request.body;
-    console.log(response.body)
-    if (name && email && phoneNumber && address) {
+  console.log(response.body);
+  if (name && email && phoneNumber && address) {
     pool.query(
       "INSERT INTO users (name, email, phone_number, address, has_realtor, brokerage) VALUES ($1, $2, $3, $4, $5, $6)",
       [name, email, phoneNumber, address, hasRealtor, brokerage],
@@ -32,7 +32,43 @@ const createUser = (request, response) => {
           throw error;
         }
         response.status(201).send(`User added with ID: ${results.insertId}`);
-      }
+      },
+    );
+  }
+};
+
+const signup = (request, response) => {
+  const { name, email, password, realtor, brokerage } = request.body;
+  if (name && email && password && realtor && brokerage) {
+    pool.query(
+      "INSERT INTO admin_users (name, email, password, realtor, brokerage) VALUES ($1, $2, $3, $4, $5)",
+      [name, email, password, realtor, brokerage],
+      (error, results) => {
+        if (error) {
+          throw error;
+        }
+        response
+          .status(201)
+          .send(`Successful signup added with ID: ${results.insertId}`);
+      },
+    );
+  }
+};
+
+const login = (request, response) => {
+  const { email, password } = request.body;
+  if (email && password) {
+    pool.query(
+      "SELECT * FROM admin_users WHERE email = ? AND password = ? VALUES ($1, $2)",
+      [email, password],
+      (error, results) => {
+        if (error) {
+          return response.json("Login Failed");
+        }
+        response
+          .status(200)
+          .send(`Successful login added with ID: ${results.insertId}`);
+      },
     );
   }
 };
@@ -62,4 +98,4 @@ const deleteUser = (request, response) => {
   // })
 };
 
-export default { getUsers, createUser, updateUser, deleteUser };
+export default { getUsers, createUser, updateUser, deleteUser, signup, login };
