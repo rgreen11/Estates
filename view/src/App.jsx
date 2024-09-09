@@ -11,9 +11,9 @@ function App() {
     <div className="App">
       <div className="container">
         {/* sign in || create account */}
-        {/* <CreateAccount /> */}
+        <CreateAccount />
         {/* create open house form */}
-        <Form title={"Learn React"} />
+        {/* <Form title={"Learn React"} /> */}
       </div>
     </div>
   );

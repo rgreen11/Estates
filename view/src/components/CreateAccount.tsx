@@ -6,7 +6,8 @@ const CreateAccount = () => {
   // password
   useEffect(() => {}, []);
   const [credientals, setCredientals] = useState({ email: "", password: "" });
-
+// make the ids unique and link the admin account with the users table
+// that way 1 admin can link to 1 user
   const handleSignin = () => {
     const request = new Request("http://localhost:8080/admin_user/save", {
       method: "POST",
