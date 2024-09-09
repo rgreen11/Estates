@@ -10,3 +10,5 @@ router.get("/", function (req, res, next) {
 // authentication
 router.post("/signup", db.signup);
 router.get("/login", db.login);
+
+export default router;
