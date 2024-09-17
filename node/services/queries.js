@@ -1,5 +1,5 @@
 import pg from "pg";
-import generateSessionToken from "./generateSessionToken";
+// import generateSessionToken from "./generateSessionToken";
 const { Pool } = pg;
 
 const pool = new Pool({
@@ -48,11 +48,11 @@ const signup = (request, response) => {
         if (error) {
           throw error;
         }
-        generateSessionToken().then((key) => {
-          response
-            .status(200)
-            .send(`Signup successful ${key}`);
-        });
+        // generateSessionToken().then((key) => {
+        //   response
+        //     .status(200)
+        //     .send(`Signup successful ${key}`);
+        // });
       },
     );
   }
@@ -68,11 +68,11 @@ const login = (request, response) => {
         if (error) {
           return response.json("Login Failed");
         }
-        generateSessionToken().then((key) => {
-          response
-            .status(200)
-            .send(`Login successful ${key}`);
-        });
+        // generateSessionToken().then((key) => {
+        //   response
+        //     .status(200)
+        //     .send(`Login successful ${key}`);
+        // });
       },
     );
   }
