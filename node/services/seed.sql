@@ -1,7 +1,11 @@
 DROP DATABASE IF EXISTS homes;
 CREATE DATABASE homes;
 
+
 \c homes; 
+
+CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+DROP TABLE IF EXISTS users;
 
 CREATE TABLE users (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
@@ -22,23 +26,18 @@ CREATE TABLE admin_users (
     password VARCHAR NOT NULL,
     realtor VARCHAR NOT NULL,
     brokerage VARCHAR NULL,
-    user_id INTEGER REFERENCES users(id) ON DELETE CASCADE
+    user_id UUID REFERENCES users(id) ON DELETE CASCADE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE sessions (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-    admin_user_id INTEGER REFERENCES admin_users(id) ON DELETE CASCADE,
+    admin_user_id UUID REFERENCES admin_users(id) ON DELETE CASCADE,
     data JSONB,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     expires_at TIMESTAMP
 );
 
 
-
--- Remove the unique constraint on email
-ALTER TABLE users DROP CONSTRAINT uq_users_email;
--- ALTER TABLE users DROP CONSTRAINT email;
-
-
-INSERT INTO users (name, email, phone_number, address, has_realtor, brokerage) VALUES 
-('Richard', 'Green', '123-456-7890', 'rich.green@kw.com', 'true', 'Big Business');
+-- INSERT INTO users (name, email, phone_number, address, has_realtor, brokerage) VALUES 
+-- ('Richard', 'Green', '123-456-7890', 'rich.green@kw.com', 'true', 'Big Business');

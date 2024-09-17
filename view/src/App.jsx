@@ -20,3 +20,8 @@ function App() {
 }
 
 export default App;
+
+
+
+// Integrate AI
+// https://aws.amazon.com/ai/generative-ai/
