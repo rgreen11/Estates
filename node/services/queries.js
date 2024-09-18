@@ -1,9 +1,9 @@
 import pg from "pg";
-// import generateSessionToken from "./generateSessionToken";
+import { generateSessionToken } from "./generateSessionToken.js";
 const { Pool } = pg;
 
 const pool = new Pool({
-  user: "me",
+  user: "richg",
   host: "localhost",
   database: "homes",
   password: "password",
@@ -23,7 +23,6 @@ const getUsers = (request, response) => {
 const createUser = (request, response) => {
   const { name, email, phoneNumber, address, hasRealtor, brokerage } =
     request.body;
-  console.log(response.body);
   if (name && email && phoneNumber && address) {
     pool.query(
       "INSERT INTO users (name, email, phone_number, address, has_realtor, brokerage) VALUES ($1, $2, $3, $4, $5, $6)",
@@ -39,25 +38,34 @@ const createUser = (request, response) => {
 };
 
 const signup = (request, response) => {
-  const { name, email, password, realtor, brokerage } = request.body;
-  if (name && email && password && realtor && brokerage) {
+  const { name, email, password, brokerage } = request.body;
+  if (name && email && password && brokerage) {
     pool.query(
-      "INSERT INTO admin_users (name, email, password, realtor, brokerage) VALUES ($1, $2, $3, $4, $5)",
-      [name, email, password, realtor, brokerage],
+      "INSERT INTO admin_users (name, email, password, brokerage) VALUES ($1, $2, $3, $4) RETURNING id",
+      [name, email, password, brokerage],
       (error, results) => {
         if (error) {
+          console.log(error);
           throw error;
         }
-        // generateSessionToken().then((key) => {
-        //   response
-        //     .status(200)
-        //     .send(`Signup successful ${key}`);
-        // });
+
+        const { id } = results.rows[0];
+        generateSessionToken(id).then((key) => {
+          response.status(200).send(`Signup successful ${key}`);
+        });
       },
     );
   }
 };
-
+let request = {
+  body: {
+    name: "name",
+    email: "email",
+    password: "password",
+    brokerage: "false",
+  },
+};
+signup(request);
 const login = (request, response) => {
   const { email, password } = request.body;
   if (email && password) {
@@ -68,11 +76,9 @@ const login = (request, response) => {
         if (error) {
           return response.json("Login Failed");
         }
-        // generateSessionToken().then((key) => {
-        //   response
-        //     .status(200)
-        //     .send(`Login successful ${key}`);
-        // });
+        generateSessionToken().then((key) => {
+          response.status(200).send(`Login successful ${key}`);
+        });
       },
     );
   }
