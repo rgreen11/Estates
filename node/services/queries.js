@@ -1,5 +1,9 @@
 import pg from "pg";
-import { generateSessionToken } from "./generateSessionToken.js";
+import {
+  generateSessionToken,
+  encryptPassword,
+  comparePasswords,
+} from "./generateSessionToken.js";
 const { Pool } = pg;
 
 const pool = new Pool({
@@ -37,52 +41,85 @@ const createUser = (request, response) => {
   }
 };
 
-const signup = (request, response) => {
+const signup = async (request, response) => {
   const { name, email, password, brokerage } = request.body;
-  if (name && email && password && brokerage) {
-    pool.query(
-      "INSERT INTO admin_users (name, email, password, brokerage) VALUES ($1, $2, $3, $4) RETURNING id",
-      [name, email, password, brokerage],
-      (error, results) => {
-        if (error) {
-          console.log(error);
-          throw error;
-        }
+  try {
+    if (name && email && password && brokerage) {
+      const encryptedPassword = await encryptPassword(password);
+      console.log(encryptedPassword);
+      pool.query(
+        "INSERT INTO admin_users (name, email, password, brokerage) VALUES ($1, $2, $3, $4) RETURNING id",
+        [name, email, encryptedPassword, brokerage],
+        (error, results) => {
+          if (error) {
+            console.log(error);
+            throw error;
+          }
 
-        const { id } = results.rows[0];
-        generateSessionToken(id).then((key) => {
-          response.status(200).send(`Signup successful ${key}`);
-        });
-      },
-    );
+          const { id } = results.rows[0];
+          generateSessionToken(id).then((key) => {
+            response.status(200).send(`Signup successful ${key}`);
+          });
+        },
+      );
+    }
+  } catch (error) {
+    console.log("catch:", error);
   }
 };
-let request = {
-  body: {
-    name: "name",
-    email: "email",
-    password: "password",
-    brokerage: "false",
-  },
-};
-signup(request);
-const login = (request, response) => {
+// let request = {
+//   body: {
+//     name: "name",
+//     email: "email",
+//     password: "password123",
+//     brokerage: "false",
+//   },
+// };
+// signup(request);
+
+const login = async (request, response) => {
   const { email, password } = request.body;
-  if (email && password) {
-    pool.query(
-      "SELECT * FROM admin_users WHERE email = ? AND password = ? VALUES ($1, $2)",
-      [email, password],
-      (error, results) => {
-        if (error) {
-          return response.json("Login Failed");
-        }
-        generateSessionToken().then((key) => {
-          response.status(200).send(`Login successful ${key}`);
-        });
-      },
-    );
+  try {
+    if (email && password) {
+      const results = await new Promise((resolve, reject) => {
+        pool.query(
+          "SELECT * FROM admin_users WHERE email = $1",
+          [email],
+          (error, results) => {
+            if (error) {
+              reject(error);
+            }
+            resolve(results);
+          },
+        );
+      });
+
+      const { id } = results.rows[results.rows.length - 1];
+
+      const isValidPassword = await comparePasswords(
+        password,
+        results.rows[results.rows.length - 1].password,
+      );
+
+      console.log({ isValidPassword });
+      if (isValidPassword) {
+        const key = await generateSessionToken(id);
+        // console.log({ key });
+        response.status(200).send(`Signup successful ${key}`);
+      }
+    }
+  } catch (error) {
+    console.log("catch:", error);
   }
 };
+
+// let request = {
+//   body: {
+//     email: "email",
+//     password: "password123",
+//   },
+// };
+// login(request);
 
 const updateUser = (request, response) => {
   // const id = parseInt(request.params.id)

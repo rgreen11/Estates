@@ -25,6 +25,17 @@ export const encryptPassword = async (myPlaintextPassword) => {
   }
 };
 
+export const comparePasswords = async (plainTextPassword, hashedPassword) => {
+  console.log({ plainTextPassword, hashedPassword });
+  try {
+    const isMatch = await bcrypt.compare(plainTextPassword, hashedPassword);
+    return isMatch;
+  } catch (error) {
+    console.error("Error comparing passwords:", error);
+    throw error; // Re-throw the error for proper handling
+  }
+};
+
 export const generateSessionToken = async (admin_user_id) => {
   try {
     const sessionId = uuidv4();
@@ -34,19 +45,21 @@ export const generateSessionToken = async (admin_user_id) => {
     // Store the encrypted session ID in the database
 
     if (admin_user_id && encrypted_session_id) {
-      pool.query(
-        "INSERT INTO sessions (admin_user_id, encrypted_session_id) VALUES ($1, $2)",
-        [admin_user_id, encrypted_session_id],
-        (error, results) => {
-          if (error) {
-            console.log({ error });
-            return error;
-          }
-          // response.status(201).send(`Sessions ID: ${results.insertId}`);
-          console.log({ results, admin_user_id, encrypted_session_id, error });
-          return encrypted_session_id;
-        },
-      );
+      const results = await new Promise((resolve, reject) => {
+        pool.query(
+          "INSERT INTO sessions (admin_user_id, encrypted_session_id) VALUES ($1, $2)",
+          [admin_user_id, encrypted_session_id],
+          (error, results) => {
+            if (error) {
+              reject(error);
+            }
+            // response.status(201).send(`Sessions ID: ${results.insertId}`);
+            console.log({ encrypted_session_id });
+            resolve(encrypted_session_id);
+          },
+        );
+      });
+      return results;
     }
   } catch (error) {
     console.error("Error encrypting password:", error);
