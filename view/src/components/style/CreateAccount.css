@@ -1,5 +1,42 @@
-.account_container{
+.form-container {
+  margin-top: 45%;
+  display: flex;
+  flex-direction: column;
+  border: solid 1px rgba(154, 152, 158, 0.276);
+  border-radius: 5px;
+  width: 50%;
+  padding: 8px;
+  background-color: rgba(18, 122, 145, 0.078);
+}
+
+.label_nme {
+  margin: 8px 0px 2px 0px;
+}
+
+.btn {
+  cursor: pointer;
+}
+
+.active_sign_in {
+  color: red;
+}
+
+.form_types {
+  display: flex;
+  justify-content: space-evenly;
+}
+
+.btn_cont{
+    margin-top: 8px;
     display: flex;
+    align-items: center;
     justify-content: center;
-    flex-direction: column;
+}
+.sub_btn{
+    border: solid 1px rgb(92, 70, 70);
+    border-radius: 5px;
+    color: rgb(24, 45, 24);
+    cursor: pointer;
+    width: 40%;
+    height: 30px;
 }
