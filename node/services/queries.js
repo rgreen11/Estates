@@ -58,7 +58,7 @@ const signup = async (request, response) => {
 
           const { id } = results.rows[0];
           generateSessionToken(id).then((key) => {
-            response.status(200).send(`Signup successful ${key}`);
+            response.status(200).send({key});
           });
         },
       );

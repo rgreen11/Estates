@@ -1,6 +1,6 @@
 import "./App.css";
 import Form from "./components/Form.tsx";
-import CreateAccount from "./components/CreateAccount.tsx";
+import AuthenticationForm from "./components/Authentication/AuthenticationForm.tsx";
 
 function App() {
   // have a use state
@@ -11,7 +11,7 @@ function App() {
     <div className="App">
       <div className="container">
         {/* sign in || create account */}
-        <CreateAccount />
+        <AuthenticationForm />
         {/* create open house form */}
         {/* <Form title={"Learn React"} /> */}
       </div>

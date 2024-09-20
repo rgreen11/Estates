@@ -2,7 +2,10 @@ import React, { useState, useEffect } from "react";
 import Button from "react-bootstrap/Button";
 import "./style/CreateAccount.css";
 
+import { handleSignup } from "./authApi";
+
 const CreateAccount = () => {
+  const [activeSignIn, setActiveSignIn] = useState(true);
   const [signInCredientals, setSignInCredientals] = useState({
     email: "",
     password: "",
@@ -14,8 +17,6 @@ const CreateAccount = () => {
     confirmPassword: "",
     brokerage: "",
   });
-
-  console.log({ signInCredientals, signUpCredientals });
 
   const handleSignUpNameChange = (e) => {
     setSignUpCredientals({
@@ -51,64 +52,7 @@ const CreateAccount = () => {
       brokerage: e.target.value,
     });
   };
-
-  // make the ids unique and link the admin account with the users table
-  // that way 1 admin can link to 1 user
-  const [isSignup, setIsSignup] = useState(false);
-
-  // const handleButtonClick = () => {
-  //   console.log({isSignup})
-  //   setIsSignup(!isSignup);
-  // };
-  const handleSignin = () => {
-    if (signInCredientals.email && signInCredientals.password) {
-      const request = new Request("http://localhost:8080/admin_user/save", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ ...signInCredientals }),
-      });
-      // We need to return something letting us know the user is logged in
-      return fetch(request)
-        .then((status) => {
-          console.log(status);
-        })
-        .catch((e) => {
-          new Error(e);
-        });
-      console.log(signInCredientals);
-    }
-    // error
-    console.log("error");
-  };
-
-  //   // Frontend
-  // const login = async () => {
-  //   const response = await fetch('/login', {
-  //     method: 'POST',
-  //     // ...
-  //   });
-  //   const data = await response.json();
-  //   const encryptedSessionId = data.sessionToken;
-  //   // Store the encrypted session ID in a cookie or local storage
-  //   localStorage.setItem('sessionToken', encryptedSessionId);
-  // };
-
-  //   const bcrypt = require('bcrypt');
-
-  // const password = 'mySecurePassword';
-  // const saltRounds = 10; // Adjust the salt rounds as needed
-
-  // bcrypt.hash(password, saltRounds)
-  //   .then(hash => {
-  //     // Store the hash in the database
-  //     console.log(hash);
-  //   })
-  //   .catch(err => {
-  //     console.error(err);
-  //   });
-
+  // --------------------- Sign In Methods -----------------------
   const handleSignInEmailChange = (event) => {
     setSignInCredientals({ ...signInCredientals, email: event.target.value });
   };
@@ -119,8 +63,6 @@ const CreateAccount = () => {
       password: event.target.value,
     });
   };
-
-  const [activeSignIn, setActiveSignIn] = useState(true);
 
   return (
     <div className="form-container">
@@ -145,7 +87,7 @@ const CreateAccount = () => {
           <input
             type="email"
             className="input"
-            onChange={handleSignInEmailChange}
+            onChange={handleSignUpEmailChange}
           />
           <label className="label_nme">Password:</label>
           <input
@@ -190,7 +132,12 @@ const CreateAccount = () => {
             onChange={handleSignUpBrokerageChange}
           />
           <div className="btn_cont">
-            <Button color="primary" size="sm" className="sub_btn">
+            <Button
+              color="primary"
+              size="sm"
+              className="sub_btn"
+              onClick={() => handleSignup(signUpCredientals)}
+            >
               Create Account
             </Button>
           </div>

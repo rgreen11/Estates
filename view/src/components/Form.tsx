@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import "./style/Form.css";
+// import "./style/Form.css";
 
 const InputForm = ({ handleForm, texts }) => {
   const handleFullNameChange = (event) => {

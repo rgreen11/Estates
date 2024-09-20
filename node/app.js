@@ -46,6 +46,33 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 
+const authenticate = (req, res, next) => {
+  const sessionId = req.cookies.sessionId;
+  if (!sessionId) {
+    return res.status(401).json({ message: "Unauthorized" });
+  }
+
+  // Fetch user data from the database using the session ID
+  // ...
+
+  // If user is authenticated, attach user data to the request object
+  req.user = {
+    /* ... user data */
+  };
+  next();
+};
+
+// Apply the middleware to protected routes
+app.use("/protected-routes", authenticate, (req, res) => {
+  // Access user data using req.user
+  res.json({ message: "You are authenticated!" });
+});
+
+app.get("/logout", (req, res) => {
+  res.clearCookie("sessionId");
+  res.redirect("/login");
+});
+
 app.use("/", indexRouter);
 app.use("/users", usersRouter);
 app.use("/admin", authentication);
