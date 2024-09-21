@@ -42,6 +42,7 @@ const createUser = (request, response) => {
 };
 
 const signup = async (request, response) => {
+  console.log("signup");
   const { name, email, password, brokerage } = request.body;
   try {
     if (name && email && password && brokerage) {
@@ -58,7 +59,8 @@ const signup = async (request, response) => {
 
           const { id } = results.rows[0];
           generateSessionToken(id).then((key) => {
-            response.status(200).send({key});
+            // change to 201
+            response.status(200).send({ key });
           });
         },
       );
@@ -67,18 +69,10 @@ const signup = async (request, response) => {
     console.log("catch:", error);
   }
 };
-// let request = {
-//   body: {
-//     name: "name",
-//     email: "email",
-//     password: "password123",
-//     brokerage: "false",
-//   },
-// };
-// signup(request);
 
 const login = async (request, response) => {
-  const { email, password } = request.body;
+  const { email, password } = JSON.parse(request.headers.params);
+  console.log({ email, password });
   try {
     if (email && password) {
       const results = await new Promise((resolve, reject) => {
@@ -104,22 +98,14 @@ const login = async (request, response) => {
       console.log({ isValidPassword });
       if (isValidPassword) {
         const key = await generateSessionToken(id);
-        // console.log({ key });
-        response.status(200).send(`Signup successful ${key}`);
+        response.status(200).send({ key });
       }
     }
   } catch (error) {
     console.log("catch:", error);
+    return error;
   }
 };
-
-// let request = {
-//   body: {
-//     email: "email",
-//     password: "password123",
-//   },
-// };
-// login(request);
 
 const updateUser = (request, response) => {
   // const id = parseInt(request.params.id)

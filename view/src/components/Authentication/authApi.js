@@ -19,6 +19,31 @@ export const handleSignup = async (signUpCredientals) => {
       const { key } = await data.json();
 
       setCookie("RichAuth", key, 2);
+      // redirect
+      return true;
+    } catch (error) {
+      console.log(error);
+      return error;
+    }
+  }
+};
+
+export const handleSignin = async (signInCredientals) => {
+  if (signInCredientals.email && signInCredientals.password) {
+    const request = new Request("http://localhost:8080/admin/login", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        params: JSON.stringify({ ...signInCredientals }),
+      },
+    });
+    try {
+      const data = await fetch(request);
+    //   console.log(data.json());
+      const { key } = await data.json();
+      console.log({ key });
+      setCookie("RichAuth", key, 2);
+      // redirect
       return true;
     } catch (error) {
       console.log(error);

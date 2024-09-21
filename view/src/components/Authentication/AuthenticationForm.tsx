@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import Button from "react-bootstrap/Button";
 import "./style/CreateAccount.css";
 
-import { handleSignup } from "./authApi";
+import { handleSignup, handleSignin } from "./authApi";
 
 const CreateAccount = () => {
   const [activeSignIn, setActiveSignIn] = useState(true);
@@ -87,7 +87,7 @@ const CreateAccount = () => {
           <input
             type="email"
             className="input"
-            onChange={handleSignUpEmailChange}
+            onChange={handleSignInEmailChange}
           />
           <label className="label_nme">Password:</label>
           <input
@@ -96,7 +96,12 @@ const CreateAccount = () => {
             onChange={handleSignInPasswordChange}
           />
           <div className="btn_cont">
-            <Button className="sub_btn">Sign In</Button>
+            <Button
+              className="sub_btn"
+              onClick={() => handleSignin(signInCredientals)}
+            >
+              Sign In
+            </Button>
           </div>
         </>
       ) : (
