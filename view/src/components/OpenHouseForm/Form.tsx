@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-// import "./style/Form.css";
+import "./Form.css";
 
 const InputForm = ({ handleForm, texts }) => {
   const handleFullNameChange = (event) => {
@@ -49,30 +49,35 @@ const InputForm = ({ handleForm, texts }) => {
 
   return (
     <div className="form_container">
+      <label className="label_nme">Name:</label>
       <input
         id="userNameInput"
         type="type"
         className="input-item"
         onChange={(e) => handleFullNameChange(e)}
       />
+      <label className="label_nme">Email:</label>
       <input
         id="userEmailInput"
         type="type"
         className="input-item"
         onChange={(e) => handleEmailChange(e)}
       />
+      <label className="label_nme">Contact:</label>
       <input
         id="userNumberInput"
         type="type"
         className="input-item"
         onChange={(e) => handleNumberChange(e)}
       />
+      <label className="label_nme">Check if you have a realtor:</label>
       <input
         id="userHasRealtorInput"
         type="checkbox"
         className="input-item"
         onChange={(e) => handleHasRealtor(e)}
       />
+      <label className="label_nme">What's the brokerage:</label>
       <input
         id="userBrokerageInput"
         type="type"
@@ -83,7 +88,7 @@ const InputForm = ({ handleForm, texts }) => {
   );
 };
 
-const Form = ({ title }: { title: string }) => {
+const Form = () => {
   const [texts, setTexts] = useState({
     name: "",
     email: "",
@@ -93,9 +98,11 @@ const Form = ({ title }: { title: string }) => {
     brokerage: "",
   });
   const [success, setSuccess] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const submitData = (event) => {
     event.preventDefault();
+    setIsLoading(true);
 
     const { name, email, phoneNumber } = texts;
     if (!name || !email || !phoneNumber) {
@@ -118,16 +125,23 @@ const Form = ({ title }: { title: string }) => {
       });
   };
   return (
-    <div className="form_container">
-      <h1>123 Main st, Brooklyn, NY 11206</h1>
-      <h3>Open house</h3>
-      <div className="form">
-        <InputForm handleForm={setTexts} texts={texts} />
-        <button type="submit" onClick={submitData}>
-          Submit
-        </button>
-      </div>
-    </div>
+    <>
+      {success ? (
+        // render this for a few seconds
+        <h1>Success</h1>
+      ) : (
+        <div className="form_container">
+          <h1 className="form_address">123 Main st, Brooklyn, NY 11206</h1>
+          <h3>Open house</h3>
+          <div className="form">
+            <InputForm handleForm={setTexts} texts={texts} />
+            <button type="submit" onClick={submitData}>
+              Submit
+            </button>
+          </div>
+        </div>
+      )}
+    </>
   );
 };
 
