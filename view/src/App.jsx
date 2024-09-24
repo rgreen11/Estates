@@ -1,12 +1,12 @@
 import "./App.css";
-import { createRoot } from "react-dom/client";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import IntroPage from "./components/Welcome/Welcome.jsx";
 import LoggedIn from "./components/LoggedIn/LoggedIn.jsx";
 import Form from "./components/OpenHouseForm/Form.tsx";
+import ViewMyClients from "./components/ViewClients/ViewMyClients.jsx";
 import AuthenticationForm from "./components/Authentication/AuthenticationForm.tsx";
-
-const root = createRoot(document.getElementById("root"));
+import AuthProvider from "./components/Authentication/AuthProvider.jsx";
+import ProtectedRoute from "./components/Authentication/ProtectedAuth.jsx";
 
 function App() {
   // have a use state
@@ -14,20 +14,32 @@ function App() {
   // when form returns a success
   // render another component to show success for a short time
   return (
-    <BrowserRouter>
-      <div className="App">
-        <div className="container">
-          {/* sign in || create account */}
-          <Routes>
-            <Route path="/" element={<IntroPage />} />
-            <Route path="/auth" element={<AuthenticationForm />} />
-            {/* Access this when sessions Token is received */}
-            <Route path="/profile" element={<LoggedIn />} />
-            <Route path="/form" element={<Form />} />
-          </Routes>
+    <AuthProvider>
+      <BrowserRouter>
+        <div className="App">
+          <div className="container">
+            {/* sign in || create account */}
+            <Routes>
+              <Route path="/" element={<IntroPage />} />
+              <Route path="/auth" element={<AuthenticationForm />} />
+              {/* Access this when sessions Token is received */}
+              <Route
+                path="/profile"
+                element={
+                  <ProtectedRoute>
+                    <LoggedIn />
+                  </ProtectedRoute>
+                }
+              />
+
+              <Route path="/form" element={<Form />} />
+
+              <Route path="view-my-clients" element={<ViewMyClients />} />
+            </Routes>
+          </div>
         </div>
-      </div>
-    </BrowserRouter>
+      </BrowserRouter>
+    </AuthProvider>
   );
 }
 

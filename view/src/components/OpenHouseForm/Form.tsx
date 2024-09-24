@@ -1,7 +1,9 @@
 import React, { useState } from "react";
+
 import "./Form.css";
 
 const InputForm = ({ handleForm, texts }) => {
+
   const handleFullNameChange = (event) => {
     if (event.target.value) {
       return handleForm({
@@ -70,7 +72,7 @@ const InputForm = ({ handleForm, texts }) => {
         className="input-item"
         onChange={(e) => handleNumberChange(e)}
       />
-      <label className="label_nme">Check if you have a realtor:</label>
+      <label className="label_nme">Check box if you have a realtor:</label>
       <input
         id="userHasRealtorInput"
         type="checkbox"
