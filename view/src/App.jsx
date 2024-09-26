@@ -32,9 +32,23 @@ function App() {
                 }
               />
 
-              <Route path="/form" element={<Form />} />
+              <Route
+                path="/form"
+                element={
+                  <ProtectedRoute>
+                    <Form />
+                  </ProtectedRoute>
+                }
+              />
 
-              <Route path="view-my-clients" element={<ViewMyClients />} />
+              <Route
+                path="view-my-clients"
+                element={
+                  <ProtectedRoute>
+                    <ViewMyClients />
+                  </ProtectedRoute>
+                }
+              />
             </Routes>
           </div>
         </div>
