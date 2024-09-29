@@ -103,7 +103,38 @@ const login = async (request, response) => {
     }
   } catch (error) {
     console.log("catch:", error);
-    return error;
+    return "Your email or password was incorrect.";
+  }
+};
+
+
+const authenticateRoute = async (req, res) => {
+  const { cookietoken} = req.headers
+  console.log('heykld:',cookietoken)
+  try {
+    if (cookietoken) {
+      const results = await new Promise((resolve, reject) => {
+        pool.query(
+          "SELECT * FROM sessions WHERE encrypted_session_id = $1",
+          [cookietoken],
+          (error, results) => {
+            if (error) {
+              reject(error);
+            }
+            resolve(results);
+          },
+        );
+      });
+      if (results.rows.length > 0){
+
+       return res.status(200).send(true);
+      } 
+      return res.status(404).send('false');
+
+    }
+  } catch (error) {
+    console.log("catch:", error);
+    return "Your email or password was incorrect.";
   }
 };
 
@@ -132,4 +163,4 @@ const deleteUser = (request, response) => {
   // })
 };
 
-export default { getUsers, createUser, updateUser, deleteUser, signup, login };
+export default { getUsers, createUser, updateUser, deleteUser, signup, login, authenticateRoute };

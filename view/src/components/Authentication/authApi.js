@@ -1,12 +1,14 @@
 import { setCookie } from "./Cookies";
 
-export const handleSignup = async (signUpCredientals) => {
+
+export const handleSignup = async (signUpCredientals, handleRedirect) => {
   if (
     signUpCredientals.name &&
     signUpCredientals.email &&
     signUpCredientals.password &&
     signUpCredientals.brokerage
   ) {
+    
     const request = new Request("http://localhost:8080/admin/signup", {
       method: "POST",
       headers: {
@@ -19,8 +21,9 @@ export const handleSignup = async (signUpCredientals) => {
       const { key } = await data.json();
 
       setCookie("RichAuth", key, 2);
+      console.log('hereee')
       // redirect
-      return true;
+      return handleRedirect()
     } catch (error) {
       console.log(error);
       return error;
@@ -28,7 +31,7 @@ export const handleSignup = async (signUpCredientals) => {
   }
 };
 
-export const handleSignin = async (signInCredientals) => {
+export const handleSignin = async (signInCredientals, handleRedirect) => {
   if (signInCredientals.email && signInCredientals.password) {
     const request = new Request("http://localhost:8080/admin/login", {
       method: "GET",
@@ -44,10 +47,10 @@ export const handleSignin = async (signInCredientals) => {
       console.log({ key });
       setCookie("RichAuth", key, 2);
       // redirect
-      return true;
+      return handleRedirect()
     } catch (error) {
       console.log(error);
-      return error;
+      throw new Error("Your email or password was incorrect.");
     }
   }
 };

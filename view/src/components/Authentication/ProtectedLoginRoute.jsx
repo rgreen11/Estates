@@ -2,24 +2,23 @@ import { useState, useEffect } from "react";
 import { Navigate } from "react-router-dom";
 import { useAuth } from "./AuthProvider";
 
-const ProtectedRoute = ({ children }) => {
+const ProtectedLoginRoute = ({ children }) => {
   const [isLoading, setIsLoading] = useState(true);
 
-  const { token, authorize } = useAuth();
+  const { token } = useAuth();
   useEffect(() => {
     setIsLoading(false);
-  
   }, []);
-  console.log(authorize);
 
   if (isLoading) {
     return <div>Loading...</div>; // Display a loading indicator while fetching token
   }
-  if (!isLoading && !token) {
+
+  if (!isLoading && token) {
     return <Navigate to="/" replace />;
   }
 
   return children;
 };
 
-export default ProtectedRoute;
+export default ProtectedLoginRoute;

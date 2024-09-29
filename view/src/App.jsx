@@ -7,6 +7,7 @@ import ViewMyClients from "./components/ViewClients/ViewMyClients.jsx";
 import AuthenticationForm from "./components/Authentication/AuthenticationForm.tsx";
 import AuthProvider from "./components/Authentication/AuthProvider.jsx";
 import ProtectedRoute from "./components/Authentication/ProtectedAuth.jsx";
+import ProtectedLoginRoute from "./components/Authentication/ProtectedLoginRoute.jsx";
 
 function App() {
   // have a use state
@@ -21,7 +22,14 @@ function App() {
             {/* sign in || create account */}
             <Routes>
               <Route path="/" element={<IntroPage />} />
-              <Route path="/auth" element={<AuthenticationForm />} />
+              <Route
+                path="/auth"
+                element={
+                  <ProtectedLoginRoute>
+                    <AuthenticationForm />
+                  </ProtectedLoginRoute>
+                }
+              />
               {/* Access this when sessions Token is received */}
               <Route
                 path="/profile"
