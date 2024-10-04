@@ -46,15 +46,6 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 
-
-// Apply the middleware to protected routes
-// app.use("/protected-routes", authenticate);
-
-app.get("/logout", (req, res) => {
-  res.clearCookie("sessionId");
-  res.redirect("/login");
-});
-
 app.use("/", indexRouter);
 app.use("/users", usersRouter);
 app.use("/admin", authentication);

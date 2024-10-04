@@ -14,30 +14,113 @@ const pool = new Pool({
   port: 5432,
 });
 
-const getUsers = (request, response) => {
-  pool.query("SELECT * FROM users ORDER BY id ASC", (error, results) => {
-    console.log("herrrrreeee!");
-    if (error) {
-      throw error;
+const getUsers = async (request, response) => {
+  const { cookietoken } = request.headers;
+  console.log(cookietoken);
+  try {
+    if (cookietoken) {
+      const adminUserId = await new Promise((resolve, reject) => {
+        pool.query(
+          "SELECT admin_user_id FROM sessions WHERE encrypted_session_id = $1",
+          [cookietoken],
+          (error, results) => {
+            if (error) {
+              console.log({ error });
+              reject(error);
+            }
+            // console.log(results.rows.admin_user_id)
+            const { admin_user_id } = results.rows[0];
+
+            resolve(admin_user_id);
+          },
+        );
+      });
+
+      if (adminUserId) {
+        const listOfUsers = await new Promise((resolve, reject) => {
+          console.log("here");
+          pool.query(
+            "SELECT u.name, u.email, u.phone_number, u.address, u.has_realtor FROM users u JOIN admin_users au ON u.id = ANY(au.user_ids) WHERE au.id = $1",
+            [adminUserId],
+            (error, results) => {
+              if (error) {
+                console.log({ error });
+                reject(error);
+              }
+              console.log(results.rows)
+              resolve(results.rows);
+            },
+          );
+        });
+        return response.status(200).send(listOfUsers);
+      }
     }
-    response.status(200).json(results.rows);
-  });
+    console.log('error')
+  } catch (error) {
+    // console.log("catch:", error);
+    // return "Your email or password was incorrect.";
+  }
 };
 
-const createUser = (request, response) => {
-  const { name, email, phoneNumber, address, hasRealtor, brokerage } =
-    request.body;
+const updateAdminUser = async (adminId, newUserId) => {
+  console.log({ adminId, newUserId });
+  try {
+    const adminUserId = await new Promise((resolve, reject) => {
+      pool.query(
+        "UPDATE admin_users SET user_ids = array_append(user_ids, $2) WHERE id = $1",
+        [adminId, newUserId],
+        (error, results) => {
+          if (error) {
+            console.log({ error });
+            reject(error);
+          }
+          console.log({ results });
+          // const { adminUserId } = results.rows[0];
+
+          // resolve(adminUserId);
+        },
+      );
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+const createUser = async (request, response) => {
+  const {
+    name,
+    email,
+    phoneNumber,
+    address,
+    hasRealtor,
+    brokerage,
+    cookieToken,
+  } = request.body;
   if (name && email && phoneNumber && address) {
-    pool.query(
-      "INSERT INTO users (name, email, phone_number, address, has_realtor, brokerage) VALUES ($1, $2, $3, $4, $5, $6)",
-      [name, email, phoneNumber, address, hasRealtor, brokerage],
-      (error, results) => {
-        if (error) {
-          throw error;
-        }
-        response.status(201).send(`User added with ID: ${results.insertId}`);
-      },
-    );
+    try {
+      const result = await pool.query(
+        "INSERT INTO users (name, email, phone_number, address, has_realtor, brokerage) VALUES ($1, $2, $3, $4, $5, $6) RETURNING id",
+        [name, email, phoneNumber, address, hasRealtor, brokerage],
+      );
+
+      const userId = result.rows[0].id;
+      // console.log('User added with ID:', userId);
+      response.status(201).send(`User added with ID: ${userId}`);
+
+      // Update the admin user with the new user ID
+      // console.log(request.body)
+      const adminId = await pool.query(
+        "SELECT admin_user_id FROM sessions WHERE encrypted_session_id = $1",
+        [cookieToken],
+      );
+
+      const { admin_user_id } = adminId.rows[0];
+      // const
+      await updateAdminUser(admin_user_id, userId);
+    } catch (error) {
+      console.error("Error creating user:", error);
+      response.status(500).send("Error creating user");
+    }
   }
 };
 
@@ -107,10 +190,8 @@ const login = async (request, response) => {
   }
 };
 
-
 const authenticateRoute = async (req, res) => {
-  const { cookietoken} = req.headers
-  console.log('heykld:',cookietoken)
+  const { cookietoken } = req.headers;
   try {
     if (cookietoken) {
       const results = await new Promise((resolve, reject) => {
@@ -125,12 +206,10 @@ const authenticateRoute = async (req, res) => {
           },
         );
       });
-      if (results.rows.length > 0){
-
-       return res.status(200).send(true);
-      } 
-      return res.status(404).send('false');
-
+      if (results.rows.length > 0) {
+        return res.status(200).send(true);
+      }
+      return res.status(404).send("false");
     }
   } catch (error) {
     console.log("catch:", error);
@@ -163,4 +242,12 @@ const deleteUser = (request, response) => {
   // })
 };
 
-export default { getUsers, createUser, updateUser, deleteUser, signup, login, authenticateRoute };
+export default {
+  getUsers,
+  createUser,
+  updateUser,
+  deleteUser,
+  signup,
+  login,
+  authenticateRoute,
+};

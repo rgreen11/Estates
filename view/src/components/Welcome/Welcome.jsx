@@ -7,7 +7,7 @@ const IntroPage = () => {
   const cookieToken = getCookie("RichAuth");
 
   return (
-    <div className="container">
+    <div className="intro_container">
       {!cookieToken && <Link to="/auth" className="auth">SignIn/Login</Link>}
       <div className="welcome_container">
         <h2 className="type">Welcome realtors!</h2>

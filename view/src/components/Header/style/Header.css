@@ -1,0 +1,30 @@
+.header {
+    position: sticky; /* Makes the header stick to the top */
+    top: 0; /* Stick to the top of the viewport */
+    background-color: #fff; /* Background color */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Shadow for depth */
+    z-index: 1000; /* Ensure it stays above other elements */
+  }
+  
+  .nav {
+    display: flex; /* Align items horizontally */
+    justify-content: space-around; /* Space out links evenly */
+    padding: 16px; /* Add padding */
+  }
+  
+  .nav-link {
+    text-decoration: none; /* Remove underline */
+    color: #333; /* Default link color */
+    font-weight: bold; /* Bold text for visibility */
+    transition: color 0.3s; /* Smooth color transition */
+  }
+  
+  .nav-link:hover {
+    color: #007bff; /* Change color on hover */
+  }
+  
+  .active {
+    color: #007bff; /* Highlight color for active link */
+    border-bottom: 2px solid #007bff; /* Underline active link */
+  }
+  

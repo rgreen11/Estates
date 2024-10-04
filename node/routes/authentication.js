@@ -11,6 +11,12 @@ router.get("/", function (req, res, next) {
 router.post("/signup", db.signup);
 router.get("/login", db.login);
 router.get("/authenticate-route", db.authenticateRoute);
+router.get("/all_users", db.getUsers)
+
+router.get("/logout", (req, res) => {
+  res.clearCookie("sessionId");
+  res.redirect("/");
+});
 
 
 export default router;

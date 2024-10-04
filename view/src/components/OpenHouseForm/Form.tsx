@@ -1,9 +1,8 @@
 import React, { useState } from "react";
-
+import { getCookie } from "../Authentication/Cookies";
 import "./Form.css";
 
 const InputForm = ({ handleForm, texts }) => {
-
   const handleFullNameChange = (event) => {
     if (event.target.value) {
       return handleForm({
@@ -105,7 +104,7 @@ const Form = () => {
   const submitData = (event) => {
     event.preventDefault();
     setIsLoading(true);
-
+    const cookieToken = getCookie("RichAuth");
     const { name, email, phoneNumber } = texts;
     if (!name || !email || !phoneNumber) {
       return new Error("Fill in the blanks");
@@ -115,7 +114,8 @@ const Form = () => {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ ...texts }),
+      // add admin user id
+      body: JSON.stringify({ ...texts, cookieToken }),
     });
     return fetch(request)
       .then((status) => {

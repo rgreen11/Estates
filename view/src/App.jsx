@@ -8,6 +8,7 @@ import AuthenticationForm from "./components/Authentication/AuthenticationForm.t
 import AuthProvider from "./components/Authentication/AuthProvider.jsx";
 import ProtectedRoute from "./components/Authentication/ProtectedAuth.jsx";
 import ProtectedLoginRoute from "./components/Authentication/ProtectedLoginRoute.jsx";
+import Header from "./components/Header/Header.jsx"
 
 function App() {
   // have a use state
@@ -17,6 +18,7 @@ function App() {
   return (
     <AuthProvider>
       <BrowserRouter>
+      <Header/>
         <div className="App">
           <div className="container">
             {/* sign in || create account */}

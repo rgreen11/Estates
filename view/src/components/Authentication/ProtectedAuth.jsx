@@ -10,7 +10,6 @@ const ProtectedRoute = ({ children }) => {
     setIsLoading(false);
   
   }, []);
-  console.log(authorize);
 
   if (isLoading) {
     return <div>Loading...</div>; // Display a loading indicator while fetching token

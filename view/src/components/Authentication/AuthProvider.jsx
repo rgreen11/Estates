@@ -11,7 +11,6 @@ const AuthProvider = ({ children }) => {
     if (cookieToken) {
       setToken(cookieToken);
       const validateToken = async () => {
-        console.log({cookieToken})
         const request = new Request(
           "http://localhost:8080/admin/authenticate-route",
           {
@@ -25,26 +24,41 @@ const AuthProvider = ({ children }) => {
 
         return await fetch(request)
           .then((status) => {
-            if (status.ok){
-              setAuthorize(true)
-            }else{
-              setAuthorize(false)
+            if (status.ok) {
+              setAuthorize(true);
+            } else {
+              setAuthorize(false);
             }
-            console.log({ status });
           })
           .catch((e) => {
-            setAuthorize(false)
+            setAuthorize(false);
           });
       };
       validateToken();
     } else {
       setToken(null);
     }
-    
   }, [authorize]);
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
+    const request = new Request("http://localhost:8080/admin/logout", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
     setToken(null);
+    return await fetch(request)
+      .then((status) => {
+        if (status.ok) {
+          setAuthorize(true);
+        } else {
+          setAuthorize(false);
+        }
+      })
+      .catch((e) => {
+        setAuthorize(false);
+      });
   };
 
   const value = {
