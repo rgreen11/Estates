@@ -1,40 +1,54 @@
 .client-list {
-    display: flex;
-    flex-direction: column; /* Stacks cards vertically */
-    margin: 20px;
-  }
-  
-  .client-card {
-    background-color: #f9f9f9;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    padding: 16px;
-    margin: 10px 0; /* Adds vertical spacing */
-    width: 100%; /* Full width for each card */
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    transition: box-shadow 0.3s;
-    display: flex; /* Aligns text in one line */
-    justify-content: space-between; /* Space between text items */
-    align-items: baseline;
-  }
-  
-  .client-card:hover {
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  }
-  
-  .client-card h2 {
-    font-size: 1.5rem;
-    color: #333;
-    margin: 0; /* Removes default margin for h2 */
-  }
-  
-  .client-card p {
-    font-size: 1rem;
-    color: #666;
-    margin: 0; /* Removes default margin for paragraphs */
-    white-space: nowrap; /* Prevents text from wrapping */
-  }
-  
-  .cl_name{
-    padding-right: 8px;
-  }
+  display: flex;
+  flex-direction: column; /* Stacks cards vertically */
+  margin: 20px;
+}
+
+.client-card {
+  background-color: #f9f9f9;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 16px;
+  margin: 10px 0; /* Adds vertical spacing */
+  width: 100%; /* Full width for each card */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: box-shadow 0.3s;
+  display: flex; /* Aligns text in one line */
+  justify-content: space-between; /* Space between text items */
+  align-items: baseline;
+  display: flex;
+  align-items: center;
+}
+
+.client-card:hover {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.client-card h2 {
+  font-size: 1.5rem;
+  color: #333;
+  margin: 0; /* Removes default margin for h2 */
+}
+
+.client-card p {
+  font-size: 1rem;
+  color: #666;
+  margin: 0; /* Removes default margin for paragraphs */
+  white-space: nowrap; /* Prevents text from wrapping */
+}
+
+.cl_name {
+  padding-right: 8px;
+}
+
+.user_info {
+  padding: 0px 8px;
+}
+
+.user_info_text {
+  font-weight: bold;
+}
+
+.title_span {
+  font-weight: 100;
+}

@@ -35,10 +35,10 @@ const ViewMyClients = () => {
           {users.map(({ name, email, phone_number, has_realtor, address }, index) => (
             <div key={index} className="client-card">
               <h2 className="cl_name">{name}</h2>
-              <p>Email: {email}</p>
-              <p>Phone: {phone_number}</p>
-              <p>Status: {has_realtor ? "Has Realtor" : "No Realtor"}</p>
-              <p>Address: {address}</p>
+              <div className="user_info"><span className="title_span">Email:</span> <p className="user_info_text">{email}</p></div>
+              <div className="user_info"><span className="title_span">Phone:</span> <p className="user_info_text">{phone_number}</p></div>
+              <div className="user_info"><span className="title_span">Status:</span> <p className="user_info_text">{has_realtor ? "Has Realtor" : "No Realtor"}</p></div>
+              <div className="user_info"><span className="title_span">Address:</span> <p className="user_info_text">{address}</p></div>
             </div>
           ))}
         </div>

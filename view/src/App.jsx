@@ -18,7 +18,7 @@ function App() {
   return (
     <AuthProvider>
       <BrowserRouter>
-      <Header/>
+      <Header />
         <div className="App">
           <div className="container">
             {/* sign in || create account */}
