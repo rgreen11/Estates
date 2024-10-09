@@ -71,3 +71,6 @@ app.listen(5432, () => {
 });
 
 export default app;
+
+
+// you can implement this using python: https://www.django-rest-framework.org/
