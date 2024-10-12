@@ -14,10 +14,20 @@ CREATE TABLE users (
     name VARCHAR NOT NULL,
     email VARCHAR NOT NULL,
     phone_number VARCHAR NOT NULL,
-    address VARCHAR NOT NULL,
     has_realtor BOOLEAN NOT NULL DEFAULT FALSE,
     brokerage VARCHAR NULL,
     optional_text TEXT,
+    notes VARCHAR NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE address (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    user_ids UUID[] DEFAULT '{}',
+    street VARCHAR NOT NULL,
+    zip_code VARCHAR NOT NULL,
+    city VARCHAR NOT NULL,
+    state VARCHAR NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -44,9 +54,12 @@ CREATE TABLE sessions (
 );
 
 
-INSERT INTO users (id, name, email, phone_number, address, has_realtor, brokerage) VALUES 
-('10000000-0000-0000-0000-000000000000', 'Richard', 'rich.green@kw.com', '123-456-7890', '123 main', 'true', 'Big Business'),
-('20000000-0000-0000-0000-000000000000', 'other', 'other@kw.com', '123-456-7890', '123 main', 'false', 'null');
+INSERT INTO users (id, name, email, phone_number, has_realtor, brokerage) VALUES 
+('10000000-0000-0000-0000-000000000000', 'Richard', 'rich.green@kw.com', '123-456-7890', 'true', 'Big Business'),
+('20000000-0000-0000-0000-000000000000', 'other', 'other@kw.com', '123-456-7890', 'false', 'null');
+
+INSERT INTO address (street, zip_code, state, city) VALUES
+    ('123 Main', '11111', 'OK', 'Oakland');
 
 INSERT INTO admin_users (name, email, password, brokerage, user_ids) VALUES
     ('Admin User 1', 'admin1@example.com', 'hashed_password', 'ABC Realty', '{10000000-0000-0000-0000-000000000000, 20000000-0000-0000-0000-000000000000}')
