@@ -1,8 +1,10 @@
+import { useState } from "react";
 import "./App.css";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import IntroPage from "./components/Welcome/Welcome.jsx";
 import LoggedIn from "./components/LoggedIn/LoggedIn.jsx";
-import Form from "./components/OpenHouseForm/Form.tsx";
+import UserForm from "./components/OpenHouseForm/UserForm.tsx";
+import AddressForm from "./components/OpenHouseForm/AddressForm.jsx"
 import ViewMyClients from "./components/ViewClients/ViewMyClients.jsx";
 import AuthenticationForm from "./components/Authentication/AuthenticationForm.tsx";
 import AuthProvider from "./components/Authentication/AuthProvider.jsx";
@@ -15,6 +17,8 @@ function App() {
   // pass it to form
   // when form returns a success
   // render another component to show success for a short time
+  const [addressId, setAddressId] = useState();
+  console.log({addressId})
   return (
     <AuthProvider>
       <BrowserRouter>
@@ -46,7 +50,16 @@ function App() {
                 path="/form"
                 element={
                   <ProtectedRoute>
-                    <Form />
+                    <AddressForm setAddressId={setAddressId}/>
+                  </ProtectedRoute>
+                }
+              />
+
+              <Route
+                path="/usr_info"
+                element={
+                  <ProtectedRoute>
+                    <UserForm addressId={addressId} />
                   </ProtectedRoute>
                 }
               />

@@ -16,7 +16,6 @@ const pool = new Pool({
 
 const getUsers = async (request, response) => {
   const { cookietoken } = request.headers;
-  console.log(cookietoken);
   try {
     if (cookietoken) {
       const adminUserId = await new Promise((resolve, reject) => {
@@ -38,7 +37,6 @@ const getUsers = async (request, response) => {
 
       if (adminUserId) {
         const listOfUsers = await new Promise((resolve, reject) => {
-          console.log("here");
           pool.query(
             "SELECT u.name, u.email, u.phone_number, u.address, u.has_realtor FROM users u JOIN admin_users au ON u.id = ANY(au.user_ids) WHERE au.id = $1",
             [adminUserId],
@@ -47,7 +45,7 @@ const getUsers = async (request, response) => {
                 console.log({ error });
                 reject(error);
               }
-              console.log(results.rows)
+              console.log(results.rows);
               resolve(results.rows);
             },
           );
@@ -55,10 +53,61 @@ const getUsers = async (request, response) => {
         return response.status(200).send(listOfUsers);
       }
     }
-    console.log('error')
+    console.log("error");
   } catch (error) {
     // console.log("catch:", error);
     // return "Your email or password was incorrect.";
+  }
+};
+
+const getAddress = async (req, res) => {
+  const { addressid } = req.headers;
+
+  try {
+    const address = await new Promise((resolve, reject) => {
+      pool.query(
+        "SELECT * FROM address WHERE id = $1",
+        [addressid],
+        (error, results) => {
+          if (error) {
+            console.log({ error });
+            reject(error);
+          }
+
+          resolve(results.rows[0]);
+        },
+      );
+    });
+    console.log({address})
+    res.status(200).send(address);
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+const saveAdress = async (req, res) => {
+  console.log(req.body);
+  try {
+    const { street, zipCode, city, state } = req.body;
+    if (street && zipCode && city && state) {
+      const result = await new Promise((resolve, reject) => {
+        pool.query(
+          "INSERT INTO address (street, zip_code, city, state) VALUES ($1, $2, $3, $4) RETURNING id",
+          [street, zipCode, city, state],
+          (error, results) => {
+            if (error) {
+              console.log(error);
+              reject(error);
+            }
+            resolve(results);
+          },
+        );
+      });
+      const { rows } = await result;
+      res.status(201).send({ rows });
+    }
+  } catch (error) {
+    console.log(error);
   }
 };
 
@@ -125,7 +174,6 @@ const createUser = async (request, response) => {
 };
 
 const signup = async (request, response) => {
-  console.log("signup");
   const { name, email, password, brokerage } = request.body;
   try {
     if (name && email && password && brokerage) {
@@ -213,7 +261,8 @@ const authenticateRoute = async (req, res) => {
     }
   } catch (error) {
     console.log("catch:", error);
-    return "Your email or password was incorrect.";
+    
+    return res.status(404).send("Your email or password was incorrect.");
   }
 };
 
@@ -250,4 +299,6 @@ export default {
   signup,
   login,
   authenticateRoute,
+  saveAdress,
+  getAddress,
 };
