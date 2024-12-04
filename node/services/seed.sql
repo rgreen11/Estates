@@ -13,6 +13,7 @@ CREATE TABLE users (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     name VARCHAR NOT NULL,
     email VARCHAR NOT NULL,
+    address_id UUID REFERENCES address(id) ON DELETE CASCADE,
     phone_number VARCHAR NOT NULL,
     has_realtor BOOLEAN NOT NULL DEFAULT FALSE,
     brokerage VARCHAR NULL,
@@ -54,9 +55,9 @@ CREATE TABLE sessions (
 );
 
 
-INSERT INTO users (id, name, email, phone_number, has_realtor, brokerage) VALUES 
-('10000000-0000-0000-0000-000000000000', 'Richard', 'rich.green@kw.com', '123-456-7890', 'true', 'Big Business'),
-('20000000-0000-0000-0000-000000000000', 'other', 'other@kw.com', '123-456-7890', 'false', 'null');
+-- INSERT INTO users (id, name, email, phone_number, address_id, has_realtor, brokerage) VALUES 
+-- ('10000000-0000-0000-0000-000000000000', 'Richard', 'rich.green@kw.com', '123-456-7890', 'true', 'Big Business'),
+-- ('20000000-0000-0000-0000-000000000000', 'other', 'other@kw.com', '123-456-7890', 'false', 'null');
 
 INSERT INTO address (street, zip_code, state, city) VALUES
     ('123 Main', '11111', 'OK', 'Oakland');

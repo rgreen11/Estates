@@ -19,6 +19,11 @@ const CreateAccount = () => {
     brokerage: "",
   });
 
+// useEffect(()=>{
+//   const shortenedPath = 'yerr';
+//     window.history.pushState({}, "", shortenedPath);
+// },[])
+
 
   const navigate = useNavigate();
   const handleRedirect = () => {
@@ -95,13 +100,13 @@ const CreateAccount = () => {
             <label className="label_nme">Email:</label>
             <input
               type="email"
-              className="input"
+              className="email"
               onChange={handleSignInEmailChange}
             />
             <label className="label_nme">Password:</label>
             <input
               type="password"
-              className="input"
+              className="password"
               onChange={handleSignInPasswordChange}
             />
             <div className="btn_cont">
@@ -118,31 +123,31 @@ const CreateAccount = () => {
             <label className="label_nme">Name:</label>
             <input
               type="text"
-              className="input"
+              className="name"
               onChange={handleSignUpNameChange}
             />
             <label className="label_nme">Email:</label>
             <input
               type="email"
-              className="input"
+              className="email"
               onChange={handleSignUpEmailChange}
             />
             <label className="label_nme">Password:</label>
             <input
               type="password"
-              className="input"
+              className="password"
               onChange={handleSignUpPasswordChange}
             />
             <label className="label_nme">Confirm Password:</label>
             <input
               type="password"
-              className="input"
+              className="password"
               onChange={handleConfirmPasswordChange}
             />
             <label className="label_nme">Brokerage:</label>
             <input
               type="text"
-              className="input"
+              className="brokerage"
               onChange={handleSignUpBrokerageChange}
             />
             <div className="btn_cont">

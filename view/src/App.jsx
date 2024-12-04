@@ -18,7 +18,7 @@ function App() {
   // when form returns a success
   // render another component to show success for a short time
   const [addressId, setAddressId] = useState();
-  console.log({addressId})
+
   return (
     <AuthProvider>
       <BrowserRouter>

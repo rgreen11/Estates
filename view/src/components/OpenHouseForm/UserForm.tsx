@@ -121,11 +121,13 @@ const UserForm = ({ addressId }) => {
     setIsLoading(true);
     const cookieToken = getCookie("RichAuth");
     const { name, email, phoneNumber } = texts;
+    
     if (!name || !email || !phoneNumber) {
       return new Error("Fill in the blanks");
     }
     try {
-      console.log({addressId: address.id})
+      console.log({addressId: address.id, texts})
+
       const response = await fetch("http://localhost:8080/users/save", {
         method: "POST",
         headers: {
@@ -137,7 +139,7 @@ const UserForm = ({ addressId }) => {
 
       setSuccess(true);
 
-      console.log(await response);
+      console.log(response);
     } catch (error) {
       console.log(error);
     }

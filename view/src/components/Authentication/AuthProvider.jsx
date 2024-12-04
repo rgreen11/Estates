@@ -6,10 +6,14 @@ const AuthContext = createContext(null);
 const AuthProvider = ({ children }) => {
   const [token, setToken] = useState(null);
   const [authorize, setAuthorize] = useState(null);
+
   useEffect(() => {
     const cookieToken = getCookie("RichAuth");
+
     if (cookieToken) {
+
       setToken(cookieToken);
+      
       const validateToken = async () => {
         const request = new Request(
           "http://localhost:8080/admin/authenticate-route",

@@ -27,7 +27,6 @@ const getUsers = async (request, response) => {
               console.log({ error });
               reject(error);
             }
-            // console.log(results.rows.admin_user_id)
             const { admin_user_id } = results.rows[0];
 
             resolve(admin_user_id);
@@ -45,8 +44,8 @@ const getUsers = async (request, response) => {
                 console.log({ error });
                 reject(error);
               }
-              console.log(results.rows);
-              resolve(results.rows);
+              console.log(results);
+              resolve(results);
             },
           );
         });
@@ -55,60 +54,66 @@ const getUsers = async (request, response) => {
     }
     console.log("error");
   } catch (error) {
-    // console.log("catch:", error);
+    console.log("catch:", error);
     // return "Your email or password was incorrect.";
   }
 };
 
-const getAddress = async (req, res) => {
-  const { addressid } = req.headers;
+const getAddress = async (addressid) => {
+  const query = "SELECT * FROM address WHERE id = $1";
+  const result = await pool.query(query, [addressid]);
+  return result.rows[0];
+  // const { addressid } = req.headers;
 
-  try {
-    const address = await new Promise((resolve, reject) => {
-      pool.query(
-        "SELECT * FROM address WHERE id = $1",
-        [addressid],
-        (error, results) => {
-          if (error) {
-            console.log({ error });
-            reject(error);
-          }
+  // try {
+  //   const address = await new Promise((resolve, reject) => {
+  //     pool.query(
+  //       "SELECT * FROM address WHERE id = $1",
+  //       [addressid],
+  //       (error, results) => {
+  //         if (error) {
+  //           console.log({ error });
+  //           reject(error);
+  //         }
 
-          resolve(results.rows[0]);
-        },
-      );
-    });
-    console.log({address})
-    res.status(200).send(address);
-  } catch (error) {
-    console.log(error);
-  }
+  //         resolve(results.rows[0]);
+  //       },
+  //     );
+  //   });
+  //   console.log({address})
+  //   res.status(200).send(address);
+  // } catch (error) {
+  //   console.log(error);
+  // }
 };
 
-const saveAdress = async (req, res) => {
-  console.log(req.body);
-  try {
-    const { street, zipCode, city, state } = req.body;
-    if (street && zipCode && city && state) {
-      const result = await new Promise((resolve, reject) => {
-        pool.query(
-          "INSERT INTO address (street, zip_code, city, state) VALUES ($1, $2, $3, $4) RETURNING id",
-          [street, zipCode, city, state],
-          (error, results) => {
-            if (error) {
-              console.log(error);
-              reject(error);
-            }
-            resolve(results);
-          },
-        );
-      });
-      const { rows } = await result;
-      res.status(201).send({ rows });
-    }
-  } catch (error) {
-    console.log(error);
-  }
+const saveAddress = async (street, zipCode, city, state) => {
+  const query =
+    "INSERT INTO address (street, zip_code, city, state) VALUES ($1, $2, $3, $4) RETURNING id";
+  const result = await pool.query(query, [street, zipCode, city, state]);
+  return result.rows[0];
+  // try {
+  //   const { street, zipCode, city, state } = req.body;
+  //   if (street && zipCode && city && state) {
+  //     const result = await new Promise((resolve, reject) => {
+  //       pool.query(
+  //         "INSERT INTO address (street, zip_code, city, state) VALUES ($1, $2, $3, $4) RETURNING id",
+  //         [street, zipCode, city, state],
+  //         (error, results) => {
+  //           if (error) {
+  //             console.log(error);
+  //             reject(error);
+  //           }
+  //           resolve(results);
+  //         },
+  //       );
+  //     });
+  //     const { rows } = await result;
+  //     res.status(201).send({ rows });
+  //   }
+  // } catch (error) {
+  //   console.log(error);
+  // }
 };
 
 const updateAdminUser = async (adminId, newUserId) => {
@@ -140,20 +145,21 @@ const createUser = async (request, response) => {
     name,
     email,
     phoneNumber,
-    address,
+    addressId,
     hasRealtor,
     brokerage,
     cookieToken,
   } = request.body;
-  if (name && email && phoneNumber && address) {
+  console.log(request.body);
+  if (name && email && phoneNumber && addressId) {
     try {
       const result = await pool.query(
-        "INSERT INTO users (name, email, phone_number, address, has_realtor, brokerage) VALUES ($1, $2, $3, $4, $5, $6) RETURNING id",
-        [name, email, phoneNumber, address, hasRealtor, brokerage],
+        "INSERT INTO users (name, email, phone_number, address_id, has_realtor, brokerage) VALUES ($1, $2, $3, $4, $5, $6) RETURNING id",
+        [name, email, phoneNumber, addressId, hasRealtor, brokerage],
       );
 
       const userId = result.rows[0].id;
-      // console.log('User added with ID:', userId);
+
       response.status(201).send(`User added with ID: ${userId}`);
 
       // Update the admin user with the new user ID
@@ -162,7 +168,7 @@ const createUser = async (request, response) => {
         "SELECT admin_user_id FROM sessions WHERE encrypted_session_id = $1",
         [cookieToken],
       );
-
+      console.log("wha::", adminId, { cookieToken });
       const { admin_user_id } = adminId.rows[0];
       // const
       await updateAdminUser(admin_user_id, userId);
@@ -261,7 +267,7 @@ const authenticateRoute = async (req, res) => {
     }
   } catch (error) {
     console.log("catch:", error);
-    
+
     return res.status(404).send("Your email or password was incorrect.");
   }
 };
@@ -299,6 +305,6 @@ export default {
   signup,
   login,
   authenticateRoute,
-  saveAdress,
+  saveAddress,
   getAddress,
 };
